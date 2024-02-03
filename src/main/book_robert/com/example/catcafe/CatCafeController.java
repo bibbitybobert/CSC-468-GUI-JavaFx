@@ -3,7 +3,7 @@ package com.example.catcafe;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class HelloController {
+public class CatCafeController {
     @FXML
     private Label welcomeText;
 
