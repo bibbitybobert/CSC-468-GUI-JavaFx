@@ -7,6 +7,6 @@ module com.example.catcafe {
     requires org.kordamp.bootstrapfx.core;
     //requires eu.hansolo.tilesfx;
 
-    opens com.example.catcafe to javafx.fxml;
-    exports com.example.catcafe;
+    opens book_robert.catcafe to javafx.fxml;
+    exports book_robert.catcafe;
 }

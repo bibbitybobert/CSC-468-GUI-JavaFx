@@ -1,13 +1,11 @@
-package com.example.catcafe;
+/*
+package book_robert.catcafe;
 
 import javafx.application.Application;
-import javafx.beans.Observable;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -15,16 +13,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import javafx.scene.text.Text;
-import org.controlsfx.control.spreadsheet.Grid;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.Callable;
 
-/*
+///*
 Complete the following checklist. If you partially completed an item, put a note how it can be checked for what is
 working for partial credit.
 
@@ -67,8 +60,8 @@ Etc.
 The grade you compute is the starting point for course staff, who reserve the right to change the grade if they disagree
 with your assessment and to deduct points for other issues they may encounter, such as errors in the submission process,
 naming issues, etc.
- */
-public class HelloApplication extends Application {
+
+public class old_main extends Application {
     public static final int WIDTH = 600;
     public static final int HEIGHT = 300;
 
@@ -100,30 +93,26 @@ public class HelloApplication extends Application {
 
         ObservableList<Node> children = newBox.getChildren();
 
-        /*
-        Label vLabel1 = new Label("vLabel1");
-
-        Label vLabel2 = new Label("vLabel2");
-
-        Label vLabel3 = new Label("vLabel3");
-
-         */
         children.addAll(inChildren);
 
         return newBox;
     }
 
-    private GridPane makeGrid(int size){
+    private GridPane makeGrid(int size, ArrayList<old_tableData> tData){
         GridPane newGrid = new GridPane();
         newGrid.setGridLinesVisible(true);
         newGrid.setAlignment(Pos.CENTER);
 
-        for(int i = 0; i < size; i++){
-            for(int j = 0; j < size; j++){
-                Button tempButton = new Button(" -E-\n-$10");
+        for(int i = 1; i <= size; i++){
+            for(int j = 1; j <= size; j++){
+                Button tempButton = new Button(" -%s-\n-$%s\n%s".formatted(
+                        tData.get((i*j) - 1).letter,
+                        tData.get((i*j) - 1).cost,
+                        tData.get((i*j) - 1).extra));
                 tempButton.setAlignment(Pos.CENTER);
                 tempButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-                newGrid.addRow(i, tempButton);
+                //newGrid.addRow(i-1, tempButton);
+                newGrid.add(tempButton, i-1, j-1);
             }
         }
 
@@ -181,6 +170,7 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         BorderPane root = new BorderPane();
+        old_CatCafeModel data = new old_CatCafeModel();
         //set title
         stage.setTitle("Cat Cafe Sim Simulation");
 
@@ -188,37 +178,32 @@ public class HelloApplication extends Application {
         root.setPrefSize(WIDTH, HEIGHT);
 
         //add stuff
-        VBox topBox = createVBox(getTopBoxList(0, 0,0, 0));
-        topBox.setStyle("-fx-border-color: Blue");
+        VBox infoBar = createVBox(getTopBoxList(data.Week, data.TablesFilled,data.Funds, data.Adopted));
+        //infoBar.setStyle("-fx-border-color: Blue");
 
-        VBox leftBox = createVBox(getLeftBoxList(0, 0, 200));
-        leftBox.setStyle("-fx-border-color: Red");
+        VBox tileInfo = createVBox(getLeftBoxList(data.FloorChanged, data.FloorAge, data.TotalCost));
+        //tileInfo.setStyle("-fx-border-color: Red");
 
-        GridPane grid = makeGrid(3);
-        grid.setStyle("-fx-border-color: Green");
+        GridPane simArea = makeGrid(data.FloorSize, data.tData);
+        //simArea.setStyle("-fx-border-color: Green");
 
-        BorderPane bottom = makeBorder();
-        bottom.setStyle("-fx-border-color: Black");
+        BorderPane actionCommand = makeBorder();
+        //actionCommand.setStyle("-fx-border-color: Black");
 
-        root.setTop(topBox);
-        BorderPane.setAlignment(topBox, Pos.CENTER);
-        BorderPane.setMargin(topBox, new Insets(10, 10, 10, 10));
+        root.setTop(infoBar);
+        BorderPane.setAlignment(infoBar, Pos.CENTER);
+        BorderPane.setMargin(infoBar, new Insets(10, 10, 10, 10));
 
+        root.setLeft(tileInfo);
+        BorderPane.setAlignment(tileInfo, Pos.CENTER);
+        BorderPane.setMargin(tileInfo, new Insets(10, 10, 10, 10));
 
-        root.setLeft(leftBox);
-        BorderPane.setAlignment(leftBox, Pos.CENTER);
-        BorderPane.setMargin(leftBox, new Insets(10, 10, 10, 10));
+        root.setCenter(simArea);
+        BorderPane.setAlignment(simArea, Pos.CENTER_LEFT);
 
-        root.setCenter(grid);
-        BorderPane.setAlignment(grid, Pos.CENTER_LEFT);
-
-        root.setBottom(bottom);
-        BorderPane.setAlignment(bottom, Pos.CENTER);
-        BorderPane.setMargin(bottom, new Insets(10, 10, 10, 10));
-
-
-
-
+        root.setBottom(actionCommand);
+        BorderPane.setAlignment(actionCommand, Pos.CENTER);
+        BorderPane.setMargin(actionCommand, new Insets(10, 10, 10, 10));
 
         //make visible
         Scene scene = new Scene(root, WIDTH, HEIGHT);
@@ -226,7 +211,8 @@ public class HelloApplication extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         launch();
     }
 }
+*/
