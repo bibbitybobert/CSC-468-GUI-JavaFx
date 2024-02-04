@@ -1,12 +1,12 @@
-package com.example.catcafe;
+/*
+package book_robert.catcafe;
 
-import java.security.PublicKey;
 import java.util.ArrayList;
 
-public class CatCafeModel {
+public class old_CatCafeModel {
 
     //visible data
-    public ArrayList<tableData> tData;
+    public ArrayList<old_tableData> tData;
     public Integer Week;
     public Integer TablesFilled;
     public Integer Funds;
@@ -20,7 +20,7 @@ public class CatCafeModel {
 
 
     //Main Constructor
-    public CatCafeModel(Integer size){
+    public old_CatCafeModel(Integer size){
         this.Week = 0;
         this.TablesFilled = 0;
         this.Funds = 0;
@@ -29,14 +29,16 @@ public class CatCafeModel {
         this.FloorAge = 0;
         this.TotalCost = 0;
         this.FloorSize = size;
-        this.tData = new ArrayList<tableData>();
+        this.tData = new ArrayList<old_tableData>();
         for(int i = 0; i < size * size; i++){
-            tableData temp = new tableData();
+            old_tableData temp = new old_tableData();
             this.tData.add(temp);
         }
 
     }
-    public CatCafeModel(){
+    public old_CatCafeModel(){
         this(3);
     }
 }
+
+ */

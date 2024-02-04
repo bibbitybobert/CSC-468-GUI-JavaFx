@@ -1,4 +1,5 @@
-package com.example.catcafe;
+/*
+package book_robert.catcafe;
 
 import javafx.application.Application;
 import javafx.collections.ObservableList;
@@ -16,7 +17,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/*
+///*
 Complete the following checklist. If you partially completed an item, put a note how it can be checked for what is
 working for partial credit.
 
@@ -59,8 +60,8 @@ Etc.
 The grade you compute is the starting point for course staff, who reserve the right to change the grade if they disagree
 with your assessment and to deduct points for other issues they may encounter, such as errors in the submission process,
 naming issues, etc.
- */
-public class CatCafe extends Application {
+
+public class old_main extends Application {
     public static final int WIDTH = 600;
     public static final int HEIGHT = 300;
 
@@ -97,7 +98,7 @@ public class CatCafe extends Application {
         return newBox;
     }
 
-    private GridPane makeGrid(int size, ArrayList<tableData> tData){
+    private GridPane makeGrid(int size, ArrayList<old_tableData> tData){
         GridPane newGrid = new GridPane();
         newGrid.setGridLinesVisible(true);
         newGrid.setAlignment(Pos.CENTER);
@@ -169,7 +170,7 @@ public class CatCafe extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         BorderPane root = new BorderPane();
-        CatCafeModel data = new CatCafeModel();
+        old_CatCafeModel data = new old_CatCafeModel();
         //set title
         stage.setTitle("Cat Cafe Sim Simulation");
 
@@ -210,7 +211,8 @@ public class CatCafe extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         launch();
     }
 }
+*/
