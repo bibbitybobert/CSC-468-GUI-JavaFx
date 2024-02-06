@@ -1,15 +1,18 @@
 package book_robert.catcafe;
 
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.*;
 
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
 public class Layout extends BorderPane{
@@ -20,9 +23,11 @@ public class Layout extends BorderPane{
     public VBox tileInfo;
     public StoreView simArea;
     public BorderPane actionCommand;
+    private Controller controller;
     public static final int WIDTH = 600;
     public static final int HEIGHT = 300;
 
+    /*
     private ArrayList<Node> getInfoBarData(){
         ArrayList<Node> list = new ArrayList<Node>();
         list.add(new Label("Floor Changed: %s".formatted(this.data.f_change)));
@@ -62,6 +67,9 @@ public class Layout extends BorderPane{
         Button nextWeek = new Button("Next Week");
         tempBP.setLeft(nextWeek);
         nextWeek.setAlignment(Pos.BOTTOM_LEFT);
+        nextWeek.setId("NextWeek");
+        nextWeek.addEventFilter(ActionEvent.ACTION, this.controller.new ActionFilter());
+
 
         //radio buttons
         HBox radioButtons = new HBox();
@@ -99,22 +107,24 @@ public class Layout extends BorderPane{
         resize.setAlignment(Pos.CENTER_RIGHT);
         return tempBP;
     }
+    */
     public Layout(){
         this.root = new BorderPane();
         this.data = new CafeSim();
+        this.controller = new Controller(data,this);
 
         //set table area
         this.simArea = new StoreView();
         this.simArea.setModel();
 
         //set infoBar
-        this.infoBar = makeVBox(getInfoBarData());
+        this.infoBar = this.controller.makeInfoBar();
 
         //set tileInfo
-        this.tileInfo = makeVBox(getTileInfo());
+        this.tileInfo = this.controller.makeTitleInfo();
 
         //set actionCommand
-        this.actionCommand = makeACBox();
+        this.actionCommand = this.controller.makeACBox();
 
         //set all nodes to correct spot on root
         this.root.setTop(this.infoBar);

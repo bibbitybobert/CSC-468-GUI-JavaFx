@@ -5,6 +5,7 @@ module com.example.catcafe {
 
     requires org.controlsfx.controls;
     requires org.kordamp.bootstrapfx.core;
+    requires java.desktop;
     //requires eu.hansolo.tilesfx;
 
     opens book_robert.catcafe to javafx.fxml;

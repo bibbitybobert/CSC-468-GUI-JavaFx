@@ -2,6 +2,7 @@ package book_robert.catcafe;
 
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
+import org.w3c.dom.events.Event;
 
 public class TileView extends Button {
     //View node that displays the tile's info
@@ -12,6 +13,7 @@ public class TileView extends Button {
         this.model = new Tile();
         this.setText("-%s-\n-$%s".formatted(this.model.letter, this.model.cost));
     }
+
 
 
 }

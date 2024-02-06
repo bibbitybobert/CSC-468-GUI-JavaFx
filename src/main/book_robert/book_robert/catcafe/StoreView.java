@@ -16,10 +16,16 @@ public class StoreView extends GridPane {
         this.grid = new GridPane();
     }
     void setModel(){
+        resize(3);
+    }
+    void resize(int size){
+        this.grid.getChildren().clear();
+        this.grid.getRowConstraints().clear();
+        this.grid.getColumnConstraints().clear();
         this.grid.setAlignment(Pos.CENTER);
 
-        for(int i = 1; i <= 3; i++){
-            for(int j = 1; j <= 3; j++){
+        for(int i = 1; i <= size; i++){
+            for(int j = 1; j <= size; j++){
                 TileView tempTile = new TileView();
                 tempTile.setAlignment(Pos.CENTER);
                 tempTile.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -27,8 +33,8 @@ public class StoreView extends GridPane {
             }
         }
 
-        for(int i = 0; i < 3; i++){
-            float percentSize = (float) 100 / 3;
+        for(int i = 0; i < size; i++){
+            float percentSize = (float) 100 / size;
             RowConstraints tempRow = new RowConstraints();
             ColumnConstraints tempCol = new ColumnConstraints();
 
@@ -42,6 +48,5 @@ public class StoreView extends GridPane {
             this.grid.getColumnConstraints().add(tempCol);
         }
     }
-    void resize(int size){}
 
 }
