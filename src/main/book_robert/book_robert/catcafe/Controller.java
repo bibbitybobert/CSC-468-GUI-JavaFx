@@ -12,28 +12,30 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.EventListener;
 
 
-public class Controller implements PropertyChangeListener {
+public class Controller{
     //this should be where your event handler should go
     public CafeSim sim;
     public Layout view;
-    @Override
-    public void propertyChange(PropertyChangeEvent evt){
 
-    }
+    public PropertyChangeSupport pcs;
 
     public Controller(CafeSim simToControl, Layout view){
         this.sim = simToControl;
         this.view = view;
+        this.pcs = new PropertyChangeSupport(this);
     }
 
+    /*
     private ArrayList<Node> getInfoBarData(){
         ArrayList<Node> list = new ArrayList<Node>();
         list.add(new Label("Floor Changed: %s".formatted(this.sim.f_change)));
@@ -52,6 +54,7 @@ public class Controller implements PropertyChangeListener {
         return list;
     }
 
+
     private VBox makeVBox(ArrayList<Node> boxData){
         VBox newVBox = new VBox();
         newVBox.setFillWidth(true);
@@ -65,8 +68,9 @@ public class Controller implements PropertyChangeListener {
         children.addAll(boxData);
         return newVBox;
     }
+    */
 
-    public BorderPane makeACBox(){
+    public BorderPane makeACBox(ToggleGroup RBGroup){
         BorderPane tempBP = new BorderPane();
 
         //Next Week Button
@@ -80,12 +84,16 @@ public class Controller implements PropertyChangeListener {
         //radio buttons
         HBox radioButtons = new HBox();
         RadioButton table = new RadioButton("Table");
+        table.setId("TableRB");
         RadioButton cat = new RadioButton("Cat");
+        cat.setId("CatRB");
         RadioButton kitten = new RadioButton("Kitten");
+        kitten.setId("KittenRB");
         RadioButton empty = new RadioButton("Empty");
+        empty.setId("EmptyRB");
         RadioButton view = new RadioButton("View");
+        view.setId("ViewRB");
 
-        ToggleGroup RBGroup = new ToggleGroup();
         table.setToggleGroup(RBGroup);
         cat.setToggleGroup(RBGroup);
         kitten.setToggleGroup(RBGroup);
@@ -123,12 +131,20 @@ public class Controller implements PropertyChangeListener {
         return tempBP;
     }
 
-    public VBox makeInfoBar(){
-        return makeVBox(getInfoBarData());
+    public Label makeInfoBar(){
+        Label infoBar = new Label();
+        infoBar.setText("Week: %s\nFilled: %s\nFunds: $%s\nAdopted: %s".formatted(
+                this.sim.week,
+                this.sim.t_filled,
+                this.sim.funds,
+                this.sim.adopted
+        ));
+        infoBar.setTextAlignment(TextAlignment.CENTER);
+        return infoBar;
     }
 
-    public VBox makeTitleInfo(){
-        return makeVBox(getTileInfo());
+    public TileInfo makeTileInfo(){
+        return new TileInfo(this.sim);
     }
 
     public class ActionFilter implements EventHandler<ActionEvent>{
@@ -142,6 +158,40 @@ public class Controller implements PropertyChangeListener {
             }
             if(((Node)event.getSource()).getId().compareTo("9x9") == 0){
                 view.simArea.resize(9);
+            }
+            if(((Node)event.getSource()).getId().compareTo("TileView") == 0){
+                if(((RadioButton)view.RBGroup.getSelectedToggle()).getText() == "Table"){
+                    ((TileView)event.getSource()).model.type = new Table();
+                    //GRADING: TRIGGER
+                    pcs.firePropertyChange("model.type",
+                            ((Node)event.getSource()).getClass(), new Table());
+                }
+                else if(((RadioButton)view.RBGroup.getSelectedToggle()).getText() == "Cat"){
+                    ((TileView)event.getSource()).model.type = new Cat();
+                    //GRADING: TRIGGER
+                    pcs.firePropertyChange("model.type",
+                            ((Node)event.getSource()).getClass(), new Cat());
+                }
+                else if(((RadioButton)view.RBGroup.getSelectedToggle()).getText() == "Kitten"){
+                    ((TileView)event.getSource()).model.type = new Kitten();
+                    //GRADING: TRIGGER
+                    pcs.firePropertyChange("model.type",
+                            ((Node)event.getSource()).getClass(), new Kitten());
+                }
+                else if(((RadioButton)view.RBGroup.getSelectedToggle()).getText() == "Empty"){
+                    ((TileView)event.getSource()).model.type = new Empty();
+                    //GRADING: TRIGGER
+                    pcs.firePropertyChange("model.type",
+                            ((Node)event.getSource()).getClass(), new Empty());
+                }
+                else if(((RadioButton)view.RBGroup.getSelectedToggle()).getText() == "View"){
+                    view.tileInfo.refactor(((TileView)event.getSource()).model.type);
+                    pcs.firePropertyChange("tileInfoBar", view.infoBar, view.infoBar);
+                }
+                else {
+                    System.out.println("Error");
+                }
+
             }
         }
     }

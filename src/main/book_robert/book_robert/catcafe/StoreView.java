@@ -1,19 +1,30 @@
 package book_robert.catcafe;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import org.controlsfx.control.GridView;
 import org.controlsfx.control.spreadsheet.Grid;
 
-public class StoreView extends GridPane {
+import java.beans.PropertyChangeSupport;
+
+public class StoreView extends GridPane{
     //the pane that holds the sim area
     public GridPane grid;
-    public StoreView(){
+    public Controller controller;
+
+
+    public StoreView(Controller controller){
         this.grid = new GridPane();
+        this.grid.setId("StoreView");
+        this.controller = controller;
     }
     void setModel(){
         resize(3);
@@ -29,6 +40,9 @@ public class StoreView extends GridPane {
                 TileView tempTile = new TileView();
                 tempTile.setAlignment(Pos.CENTER);
                 tempTile.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                tempTile.setId("TileView");
+                tempTile.addEventFilter(ActionEvent.ACTION, this.controller.new ActionFilter());
+                this.controller.pcs.addPropertyChangeListener(tempTile); //GRADING: SUBJECT
                 this.grid.addRow(i-1, tempTile);
             }
         }
