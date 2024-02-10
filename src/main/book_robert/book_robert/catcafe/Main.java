@@ -55,6 +55,7 @@ public class Main extends Application {
     //Startup the JavaFX app here
     public static final int WIDTH = 600;
     public static final int HEIGHT = 300;
+
     @Override
     public void start(Stage stage) throws Exception {
         Layout layout = new Layout();

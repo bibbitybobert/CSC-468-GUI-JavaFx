@@ -1,11 +1,15 @@
 package book_robert.catcafe;
 
-public class FloorArea {
+import java.beans.PropertyChangeSupport;
+
+public class FloorArea{
     //Base class for the floor area
-    int totalCost;
-    int lastChaned;
-    int age;
-    int weeklyCost;
-    String name;
-    void nextWeek(){}
+    public char letter;
+    public int totalCost;
+    public int lastChanged;
+    public int age;
+    public int weeklyCost;
+
+    public String name;
+    public void nextWeek(){}
 }

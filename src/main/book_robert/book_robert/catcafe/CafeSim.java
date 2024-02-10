@@ -10,7 +10,7 @@ public class CafeSim {
     int f_change;
     int f_age;
     int t_cost;
-    String view;
+    int t_revenue;
 
     public CafeSim(){
         this.timeSinceReset = 0;
@@ -21,7 +21,7 @@ public class CafeSim {
         this.f_change = 0;
         this.f_age = 0;
         this.t_cost = 0;
-        this.view = "Empty";
+        this.t_revenue = 0;
     }
     void nextWeek(){}
 }
