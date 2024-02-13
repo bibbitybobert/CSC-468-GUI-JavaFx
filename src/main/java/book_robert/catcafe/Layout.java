@@ -2,6 +2,7 @@ package book_robert.catcafe;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -32,16 +33,17 @@ public class Layout extends BorderPane implements PropertyChangeListener{
         this.root = new BorderPane();
         this.data = new CafeSim();
         this.controller = new Controller(data,this);
+        this.controller.pcs.addPropertyChangeListener(this);
 
         //set table area
-        this.simArea = new StoreView(this.controller);
-        this.simArea.setModel();
+        this.simArea = new StoreView(this.data);
+        this.setSimArea();
 
         //set infoBar
         this.infoBar = this.controller.makeInfoBar();
 
         //set tileInfo
-        this.tileInfo = this.controller.makeTileInfo();
+        this.tileInfo = this.controller.makeTileInfo(0);
         this.controller.pcs.addPropertyChangeListener(this.tileInfo);
 
         //set actionCommand
@@ -61,8 +63,23 @@ public class Layout extends BorderPane implements PropertyChangeListener{
         BorderPane.setAlignment(this.actionCommand, Pos.CENTER);
     }
 
+    public void setSimArea(){
+        this.simArea.setModel();
+        for(Node btn : this.simArea.grid.getChildren()){
+            btn.addEventFilter(ActionEvent.ACTION, this.controller.new ActionFilter());
+        }
+        this.controller.pcs.addPropertyChangeListener(this.simArea);
+    }
+
+    public void setTileInfo(){
+        System.out.println("set tileInfo");
+        this.root.setLeft(this.tileInfo.data);
+        BorderPane.setAlignment(this.tileInfo.data, Pos.CENTER);
+    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        System.out.println("layout PC triggered");
         this.root.setLeft(this.tileInfo);
     }
 }
