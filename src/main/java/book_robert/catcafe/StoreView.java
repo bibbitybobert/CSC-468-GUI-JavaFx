@@ -1,5 +1,6 @@
 package book_robert.catcafe;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -13,23 +14,58 @@ import javafx.scene.layout.RowConstraints;
 import org.controlsfx.control.GridView;
 import org.controlsfx.control.spreadsheet.Grid;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class StoreView extends GridPane{
+public class StoreView extends GridPane implements PropertyChangeListener{
     //the pane that holds the sim area
     public GridPane grid;
-    public Controller controller;
+    public CafeSim sim;
 
-
-    public StoreView(Controller controller){
+    public StoreView(CafeSim subj){
         this.grid = new GridPane();
+        this.sim = subj;
         this.grid.setId("StoreView");
-        this.controller = controller;
     }
     void setModel(){
-        resize(3);
+        System.out.println("resizing to " + Integer.toString(this.sim.storeSize));
+        this.grid.getChildren().clear();
+        this.grid.getRowConstraints().clear();
+        this.grid.getColumnConstraints().clear();
+        this.grid.setAlignment(Pos.CENTER);
+        for(int i =0; i < sim.storeSize; i++){
+            for(int j = 0; j < sim.storeSize; j++){
+                int index = (i * sim.storeSize) + j;
+                TileView tempTile = new TileView(sim.tiles.get(index),index);
+                tempTile.setAlignment(Pos.CENTER);
+                tempTile.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                this.grid.addRow(i, tempTile);
+            }
+        }
+        for(int i = 0; i < sim.storeSize; i++){
+            float percentSize = (float) 100 / sim.storeSize;
+            RowConstraints tempRow = new RowConstraints();
+            ColumnConstraints tempCol = new ColumnConstraints();
+
+            tempRow.setPercentHeight(percentSize);
+            tempCol.setPercentWidth(percentSize);
+
+            tempRow.setValignment(VPos.CENTER);
+            tempCol.setHalignment(HPos.CENTER);
+
+            this.grid.getRowConstraints().add(tempRow);
+            this.grid.getColumnConstraints().add(tempCol);
+        }
     }
-    void resize(int size){
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        System.out.println("Fuck v.3");
+        this.setModel();
+    }
+
+    /*void resize(int size){
         this.grid.getChildren().clear();
         this.grid.getRowConstraints().clear();
         this.grid.getColumnConstraints().clear();
@@ -61,6 +97,6 @@ public class StoreView extends GridPane{
             this.grid.getRowConstraints().add(tempRow);
             this.grid.getColumnConstraints().add(tempCol);
         }
-    }
+    }*/
 
 }

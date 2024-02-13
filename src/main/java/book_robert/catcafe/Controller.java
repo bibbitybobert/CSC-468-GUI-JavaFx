@@ -35,41 +35,6 @@ public class Controller{
         this.pcs = new PropertyChangeSupport(this);
     }
 
-    /*
-    private ArrayList<Node> getInfoBarData(){
-        ArrayList<Node> list = new ArrayList<Node>();
-        list.add(new Label("Floor Changed: %s".formatted(this.sim.f_change)));
-        list.add(new Label("Floor Age: %s".formatted(this.sim.f_age)));
-        list.add(new Label("Total Cost: $%s".formatted(this.sim.t_cost)));
-        return list;
-    }
-
-    private ArrayList<Node> getTileInfo(){
-        ArrayList<Node> list = new ArrayList<Node>();
-        list.add(new Label(this.sim.view));
-        list.add(new Label("Week: %s".formatted(this.sim.week)));
-        list.add(new Label("Filled: %s".formatted(this.sim.t_filled)));
-        list.add(new Label("Funds: $%s".formatted(this.sim.funds)));
-        list.add(new Label("Adopted: %s".formatted(this.sim.adopted)));
-        return list;
-    }
-
-
-    private VBox makeVBox(ArrayList<Node> boxData){
-        VBox newVBox = new VBox();
-        newVBox.setFillWidth(true);
-        newVBox.setAlignment(Pos.CENTER);
-
-        Region spacer = new Region();
-        VBox.setVgrow(spacer, Priority.ALWAYS);
-
-        ObservableList<Node> children = newVBox.getChildren();
-
-        children.addAll(boxData);
-        return newVBox;
-    }
-    */
-
     public BorderPane makeACBox(ToggleGroup RBGroup){
         BorderPane tempBP = new BorderPane();
 
@@ -143,55 +108,57 @@ public class Controller{
         return infoBar;
     }
 
-    public TileInfo makeTileInfo(){
-        return new TileInfo(this.sim);
+    public TileInfo makeTileInfo(int tileIdx){
+        TileInfo tempTileInfo = new TileInfo(this.sim.tiles.get(tileIdx), this.sim);
+        pcs.addPropertyChangeListener(tempTileInfo);
+        return tempTileInfo;
     }
 
     public class ActionFilter implements EventHandler<ActionEvent>{
         @Override
         public void handle(ActionEvent event){
-            if(((Node)event.getSource()).getId().compareTo("3x3") == 0){
-                view.simArea.resize(3);
-            }
-            if(((Node)event.getSource()).getId().compareTo("5x5") == 0){
-                view.simArea.resize(5);
-            }
-            if(((Node)event.getSource()).getId().compareTo("9x9") == 0){
-                view.simArea.resize(9);
-            }
-            if(((Node)event.getSource()).getId().compareTo("TileView") == 0){
-                if(((RadioButton)view.RBGroup.getSelectedToggle()).getText() == "Table"){
-                    ((TileView)event.getSource()).model.type = new Table();
-                    //GRADING: TRIGGER
-                    pcs.firePropertyChange("model.type",
-                            ((Node)event.getSource()).getClass(), new Table());
-                }
-                else if(((RadioButton)view.RBGroup.getSelectedToggle()).getText() == "Cat"){
-                    ((TileView)event.getSource()).model.type = new Cat();
-                    //GRADING: TRIGGER
-                    pcs.firePropertyChange("model.type",
-                            ((Node)event.getSource()).getClass(), new Cat());
-                }
-                else if(((RadioButton)view.RBGroup.getSelectedToggle()).getText() == "Kitten"){
-                    ((TileView)event.getSource()).model.type = new Kitten();
-                    //GRADING: TRIGGER
-                    pcs.firePropertyChange("model.type",
-                            ((Node)event.getSource()).getClass(), new Kitten());
-                }
-                else if(((RadioButton)view.RBGroup.getSelectedToggle()).getText() == "Empty"){
-                    ((TileView)event.getSource()).model.type = new Empty();
-                    //GRADING: TRIGGER
-                    pcs.firePropertyChange("model.type",
-                            ((Node)event.getSource()).getClass(), new Empty());
-                }
-                else if(((RadioButton)view.RBGroup.getSelectedToggle()).getText() == "View"){
-                    view.tileInfo.refactor(((TileView)event.getSource()).model.type);
-                    pcs.firePropertyChange("tileInfoBar", view.infoBar, view.infoBar);
-                }
-                else {
-                    System.out.println("Error");
-                }
+            if(event.getSource() instanceof TileView) {
+                switch (((RadioButton) view.RBGroup.getSelectedToggle()).getText()){
+                    case "Table" -> {
+                        sim.setTile(((TileView) event.getSource()).idx, "table");
+                    }
+                    case "Cat" -> sim.setTile(((TileView) event.getSource()).idx,
+                            "cat");
 
+                    case "Kitten" -> sim.setTile(((TileView) event.getSource()).idx,
+                            "kitten");
+
+                    case "Empty" -> sim.setTile(((TileView) event.getSource()).idx,
+                            "empty");
+
+                    case "View" -> {
+                        System.out.println("View of idx: " + Integer.toString(((TileView) event.getSource()).idx));
+                        view.tileInfo = makeTileInfo(((TileView) event.getSource()).idx);
+                        view.setTileInfo();
+                        pcs.firePropertyChange("tileInfoChange",
+                                view.tileInfo,
+                                view.tileInfo);
+                    }
+
+                    default -> {
+                        System.out.println("ERROR");
+                        System.exit(0);
+                    }
+                }
+            }
+            else if(event.getSource() instanceof Button) {
+                if (((Node) event.getSource()).getId().compareTo("3x3") == 0) {
+                    sim.resizeTiles(3, "empty");
+                    view.setSimArea();
+                }
+                if (((Node) event.getSource()).getId().compareTo("5x5") == 0) {
+                    sim.resizeTiles(5, "empty");
+                    view.setSimArea();
+                }
+                if (((Node) event.getSource()).getId().compareTo("9x9") == 0) {
+                    sim.resizeTiles(9, "empty");
+                    view.setSimArea();
+                }
             }
         }
     }

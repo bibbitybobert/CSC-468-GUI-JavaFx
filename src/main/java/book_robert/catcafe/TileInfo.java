@@ -3,6 +3,7 @@ package book_robert.catcafe;
 import javafx.scene.control.Label;
 import javafx.scene.text.TextAlignment;
 
+import java.awt.desktop.SystemEventListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -10,13 +11,15 @@ public class TileInfo extends Label implements PropertyChangeListener {
     Label data;
     FloorArea dataLookup;
     CafeSim sim;
-    public TileInfo(CafeSim sim){
-        this.dataLookup = new Empty();
+    public TileInfo(Tile observe, CafeSim sim){
+        System.out.println("TileInfo type: " + observe.type);
+        this.dataLookup = observe.type;
         this.sim = sim;
         this.refactor(this.dataLookup);
     }
 
     public void refactor(FloorArea tileType){
+        System.out.println("refactoring");
         data = new Label();
         if (tileType.getClass() == Empty.class){
             data.setText("%s\nFloor Changed: %s\nFloor Age: %s\nTotal Cost: $%s".formatted(
@@ -73,6 +76,7 @@ public class TileInfo extends Label implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        this.refactor(this.dataLookup);
+        System.out.println("TileInfo PC");
+        this.refactor(dataLookup);
     }
 }
