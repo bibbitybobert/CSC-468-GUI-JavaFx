@@ -2,81 +2,85 @@ package book_robert.catcafe;
 
 import javafx.scene.control.Label;
 import javafx.scene.text.TextAlignment;
-
-import java.awt.desktop.SystemEventListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.Objects;
 
 public class TileInfo extends Label implements PropertyChangeListener {
-    Label data;
-    FloorArea dataLookup;
-    CafeSim sim;
+    public Label data;
+    public Tile dataLookup;
+    public CafeSim sim;
+    public PropertyChangeSupport pcs;
     public TileInfo(Tile observe, CafeSim sim){
-        System.out.println("TileInfo type: " + observe.type);
-        this.dataLookup = observe.type;
+        this.dataLookup = observe;
         this.sim = sim;
+        this.pcs = new PropertyChangeSupport(this);
+        this.dataLookup.pcs.addPropertyChangeListener(this);
         this.refactor(this.dataLookup);
     }
 
-    public void refactor(FloorArea tileType){
-        System.out.println("refactoring");
-        data = new Label();
-        if (tileType.getClass() == Empty.class){
-            data.setText("%s\nFloor Changed: %s\nFloor Age: %s\nTotal Cost: $%s".formatted(
-                    tileType.name,
+    public void refactor(Tile observe){
+        this.data = new Label();
+        if (observe.type instanceof Empty){
+            this.data.setText("%s\nFloor Changed: %s\nFloor Age: %s\nTotal Cost: $%s".formatted(
+                    observe.type.name,
                     this.sim.f_change,
                     this.sim.f_age,
-                    this.sim.t_cost
+                    observe.t_t_cost
             ));
         }
-        else if(tileType.getClass() == Table.class){
-            data.setText("%s\nFloor Changed: %s\nFloor Age: %s\nTotal Cost: $%s\nTotal Revenue: $%s".formatted(
-                    tileType.name,
+        else if(observe.type instanceof Table){
+            this.data.setText("%s\nFloor Changed: %s\nFloor Age: %s\nTotal Cost: $%s\nTotal Revenue: $%s".formatted(
+                    observe.type.name,
                     this.sim.f_change,
                     this.sim.f_age,
-                    this.sim.t_cost,
+                    observe.t_t_cost,
                     this.sim.t_revenue
             ));
 
         }
-        else if(tileType.getClass() == Cat.class){
-            data.setText(("%s\n" +
+        else if(observe.type instanceof Cat){
+            this.data.setText(("%s\n" +
                     "Floor Changed: %s\n" +
                     "Floor Age: %s\n" +
                     "Total Cost: $%s\n" +
                     "Cat age: %s\n" +
                     "Weeks until adoption: %s").formatted(
-                    tileType.name,
+                    observe.type.name,
                     this.sim.f_change,
                     this.sim.f_age,
-                    this.sim.t_cost,
-                    tileType.age,
-                    ((Cat) tileType).countdown
+                    observe.t_t_cost,
+                    observe.type.age,
+                    ((Cat) observe.type).countdown
             ));
 
         }
-        else if(tileType.getClass() == Kitten.class){
-            data.setText(("%s\n" +
+        else if(observe.type instanceof Kitten){
+            this.data.setText(("%s\n" +
                     "Floor Changed: %s\n" +
                     "Floor Age: %s\n" +
                     "Total Cost: $%s\n" +
                     "Cat age: %s\n" +
                     "Weeks until adoption: %s").formatted(
-                    tileType.name,
+                    observe.type.name,
                     this.sim.f_change,
                     this.sim.f_age,
-                    this.sim.t_cost,
-                    tileType.age,
-                    ((Kitten) tileType).countdown
+                    observe.t_t_cost,
+                    observe.type.age,
+                    ((Kitten) observe.type).countdown
             ));
 
         }
-        data.setTextAlignment(TextAlignment.LEFT);
+        this.data.setTextAlignment(TextAlignment.LEFT);
+        this.dataLookup.observed = true;
+        this.pcs.firePropertyChange("refactored TI", null, this.data);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        System.out.println("TileInfo PC");
-        this.refactor(dataLookup);
+        if(!Objects.equals(evt.getPropertyName(), "being observed")) {
+            this.refactor(this.dataLookup);
+        }
     }
 }

@@ -2,7 +2,6 @@ package book_robert.catcafe;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -11,28 +10,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
-import java.util.EventListener;
-
 
 public class Controller{
     //this should be where your event handler should go
     public CafeSim sim;
     public Layout view;
 
-    public PropertyChangeSupport pcs;
-
     public Controller(CafeSim simToControl, Layout view){
         this.sim = simToControl;
         this.view = view;
-        this.pcs = new PropertyChangeSupport(this);
     }
 
     public BorderPane makeACBox(ToggleGroup RBGroup){
@@ -44,20 +30,30 @@ public class Controller{
         nextWeek.setAlignment(Pos.BOTTOM_LEFT);
         nextWeek.setId("NextWeek");
         nextWeek.addEventFilter(ActionEvent.ACTION, new ActionFilter());
+        nextWeek.setStyle("-fx-background-color: #dda6b5; -fx-border-color: #ffd3da");
 
 
         //radio buttons
         HBox radioButtons = new HBox();
         RadioButton table = new RadioButton("Table");
         table.setId("TableRB");
+        table.setStyle("-fx-background-color: #9075d8; -fx-border-color: #dda6b5");
+
         RadioButton cat = new RadioButton("Cat");
         cat.setId("CatRB");
+        cat.setStyle("-fx-background-color: #eb9d9d; -fx-border-color: #ffd3da");
+
         RadioButton kitten = new RadioButton("Kitten");
         kitten.setId("KittenRB");
+        kitten.setStyle("-fx-background-color: #cea2d7; -fx-border-color: #ffd3da");
+
         RadioButton empty = new RadioButton("Empty");
         empty.setId("EmptyRB");
+        empty.setStyle("-fx-background-color: #ffdbde; -fx-border-color: #dda6b5");
+
         RadioButton view = new RadioButton("View");
         view.setId("ViewRB");
+        view.setStyle("-fx-background-color: #ffdbde; -fx-border-color: #dda6b5");
 
         table.setToggleGroup(RBGroup);
         cat.setToggleGroup(RBGroup);
@@ -79,10 +75,12 @@ public class Controller{
         Button threeByThree = new Button("3x3");
         threeByThree.setId("3x3");
         threeByThree.addEventFilter(ActionEvent.ACTION, new ActionFilter());
+        threeByThree.setStyle("-fx-background-color: #dda6b5; -fx-border-color: #ffd3da");
 
         Button fiveByFive = new Button("5x5");
         fiveByFive.setId("5x5");
         fiveByFive.addEventFilter(ActionEvent.ACTION, new ActionFilter());
+        fiveByFive.setStyle("-fx-background-color: #dda6b5; -fx-border-color: #ffd3da");
 
         Button nineByNine = new Button("9x9");
         nineByNine.setId("9x9");
@@ -90,31 +88,23 @@ public class Controller{
 
         ObservableList<Node> resizeChildren = resize.getChildren();
         resizeChildren.addAll(resizeLabel, threeByThree, fiveByFive, nineByNine);
+        nineByNine.setStyle("-fx-background-color: #dda6b5; -fx-border-color: #ffd3da");
 
         tempBP.setRight(resize);
         resize.setAlignment(Pos.CENTER_RIGHT);
         return tempBP;
     }
 
-    public Label makeInfoBar(){
-        Label infoBar = new Label();
-        infoBar.setText("Week: %s\nFilled: %s\nFunds: $%s\nAdopted: %s".formatted(
-                this.sim.week,
-                this.sim.t_filled,
-                this.sim.funds,
-                this.sim.adopted
-        ));
-        infoBar.setTextAlignment(TextAlignment.CENTER);
-        return infoBar;
-    }
-
-    public TileInfo makeTileInfo(int tileIdx){
-        TileInfo tempTileInfo = new TileInfo(this.sim.tiles.get(tileIdx), this.sim);
-        pcs.addPropertyChangeListener(tempTileInfo);
-        return tempTileInfo;
-    }
-
     public class ActionFilter implements EventHandler<ActionEvent>{
+
+        private void clearTileInfo(){
+            for(Tile tile : sim.tiles){
+                if(tile == view.tileInfo.dataLookup){
+                    tile.pcs.removePropertyChangeListener(view.tileInfo);
+                }
+            }
+        }
+
         @Override
         public void handle(ActionEvent event){
             if(event.getSource() instanceof TileView) {
@@ -129,15 +119,22 @@ public class Controller{
                             "kitten");
 
                     case "Empty" -> sim.setTile(((TileView) event.getSource()).idx,
-                            "empty");
+                                "empty");
 
                     case "View" -> {
-                        System.out.println("View of idx: " + Integer.toString(((TileView) event.getSource()).idx));
-                        view.tileInfo = makeTileInfo(((TileView) event.getSource()).idx);
-                        view.setTileInfo();
-                        pcs.firePropertyChange("tileInfoChange",
-                                view.tileInfo,
-                                view.tileInfo);
+                        TileView lookat = ((TileView) event.getSource());
+                        for(Node t: view.simArea.grid.getChildren()){
+                            if(((TileView)t).model == view.tileInfo.dataLookup){
+                                ((TileView)t).color();
+                                ((TileView)t).model.observed = false;
+                            }
+                        }
+                        view.tileInfo.dataLookup.pcs.removePropertyChangeListener(view.tileInfo);
+                        view.tileInfo.dataLookup = lookat.model;
+                        lookat.model.observed = true;
+                        lookat.highlight();
+                        view.tileInfo.refactor(view.tileInfo.dataLookup);
+                        view.tileInfo.dataLookup.pcs.addPropertyChangeListener(view.tileInfo);
                     }
 
                     default -> {
@@ -145,19 +142,31 @@ public class Controller{
                         System.exit(0);
                     }
                 }
+                sim.pcs.firePropertyChange("Tile Changed", null, sim);
             }
             else if(event.getSource() instanceof Button) {
-                if (((Node) event.getSource()).getId().compareTo("3x3") == 0) {
-                    sim.resizeTiles(3, "empty");
-                    view.setSimArea();
+                if (((Node) event.getSource()).getId().compareTo("NextWeek") == 0){
+                    sim.nextWeek();
                 }
-                if (((Node) event.getSource()).getId().compareTo("5x5") == 0) {
-                    sim.resizeTiles(5, "empty");
+                else {
+                    this.clearTileInfo();
+                    view.simArea.removeListeners();
+                    if (((Node) event.getSource()).getId().compareTo("3x3") == 0) {
+                        sim.resizeTiles(3);
+                    }
+                    if (((Node) event.getSource()).getId().compareTo("5x5") == 0) {
+                        sim.resizeTiles(5);
+                    }
+                    if (((Node) event.getSource()).getId().compareTo("9x9") == 0) {
+                        sim.resizeTiles(9);
+
+                    }
+                    view.simArea.setModel();
                     view.setSimArea();
-                }
-                if (((Node) event.getSource()).getId().compareTo("9x9") == 0) {
-                    sim.resizeTiles(9, "empty");
-                    view.setSimArea();
+                    view.tileInfo.dataLookup = sim.tiles.get(0);
+                    ((TileView) view.simArea.grid.getChildren().get(0)).highlight();
+                    sim.tiles.get(0).pcs.addPropertyChangeListener(view.tileInfo);
+                    sim.tiles.get(0).pcs.firePropertyChange("newTile", null, sim.tiles.get(0));
                 }
             }
         }

@@ -1,8 +1,6 @@
 package book_robert.catcafe;
 
-import java.beans.PropertyChangeSupport;
-
-public class FloorArea{
+public abstract class FloorArea{
     //Base class for the floor area
     public char letter;
     public int totalCost;
