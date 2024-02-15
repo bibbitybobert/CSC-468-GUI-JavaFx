@@ -60,7 +60,7 @@ public class Main extends Application {
     public static final int HEIGHT = 300;
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage){
         Layout layout = new Layout();
         stage.setTitle("Cat Cafe Sim Simulation");
         Scene scene = new Scene(layout.root, WIDTH, HEIGHT);

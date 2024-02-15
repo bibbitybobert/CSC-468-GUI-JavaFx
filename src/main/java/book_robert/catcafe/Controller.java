@@ -109,9 +109,8 @@ public class Controller{
         public void handle(ActionEvent event){
             if(event.getSource() instanceof TileView) {
                 switch (((RadioButton) view.RBGroup.getSelectedToggle()).getText()){
-                    case "Table" -> {
-                        sim.setTile(((TileView) event.getSource()).idx, "table");
-                    }
+                    case "Table" -> sim.setTile(((TileView) event.getSource()).idx,
+                            "table");
                     case "Cat" -> sim.setTile(((TileView) event.getSource()).idx,
                             "cat");
 

@@ -18,9 +18,6 @@ public class Layout extends BorderPane implements PropertyChangeListener{
     public BorderPane actionCommand;
     private Controller controller;
     public ToggleGroup RBGroup;
-    public static final int WIDTH = 600;
-    public static final int HEIGHT = 300;
-
     public Layout(){
         this.root = new BorderPane();
         this.data = new CafeSim();
