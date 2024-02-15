@@ -40,7 +40,7 @@ public class Tile{
             default ->
                 this.type = new Empty();
         }
-        this.pcs.firePropertyChange("type", oldType, this.type);
+        this.pcs.firePropertyChange("type", oldType, this.type); //GRADING: TRIGGER
     }
 
     void nextWeek(){

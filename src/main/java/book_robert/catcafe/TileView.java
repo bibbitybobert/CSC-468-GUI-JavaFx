@@ -12,7 +12,7 @@ public class TileView extends Button implements PropertyChangeListener {
 
     public TileView(Tile observes, int index) {
         this.model = observes;
-        observes.pcs.addPropertyChangeListener(this);
+        observes.pcs.addPropertyChangeListener(this); //GRADING: SUBJECT
         this.idx = index;
         this.setText("-%s-\n-$%s".formatted(this.model.type.letter, this.model.type.weeklyCost));
         this.setTextAlignment(TextAlignment.CENTER);
@@ -37,6 +37,7 @@ public class TileView extends Button implements PropertyChangeListener {
         this.setStyle("-fx-border-color: #007f87;" +
                 " -fx-border-width: 5;" + this.getStyle());
         this.model.observed = true;
+        //GRADING 1.B TRIGGER-TILE AREA
         this.model.pcs.firePropertyChange("highlight set", oldSelf, this);
     }
     @Override

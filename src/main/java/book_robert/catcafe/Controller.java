@@ -133,7 +133,7 @@ public class Controller{
                         lookat.model.observed = true;
                         lookat.highlight();
                         view.tileInfo.refactor(view.tileInfo.dataLookup);
-                        view.tileInfo.dataLookup.pcs.addPropertyChangeListener(view.tileInfo);
+                        view.tileInfo.dataLookup.pcs.addPropertyChangeListener(view.tileInfo); //GRADING: 1.B SUBJECT-TILE AREA
                     }
 
                     default -> {
@@ -141,7 +141,7 @@ public class Controller{
                         System.exit(0);
                     }
                 }
-                sim.pcs.firePropertyChange("Tile Changed", null, sim);
+                sim.pcs.firePropertyChange("Tile Changed", null, sim); //GRADING: TRIGGER
             }
             else if(event.getSource() instanceof Button) {
                 if (((Node) event.getSource()).getId().compareTo("NextWeek") == 0){
@@ -164,7 +164,8 @@ public class Controller{
                     view.setSimArea();
                     view.tileInfo.dataLookup = sim.tiles.get(0);
                     ((TileView) view.simArea.grid.getChildren().get(0)).highlight();
-                    sim.tiles.get(0).pcs.addPropertyChangeListener(view.tileInfo);
+                    sim.tiles.get(0).pcs.addPropertyChangeListener(view.tileInfo); //GRADING: 1.B SUBJECT-TILE AREA
+                    //GRADING: 1.B TRIGGER-TILE AREA
                     sim.tiles.get(0).pcs.firePropertyChange("newTile", null, sim.tiles.get(0));
                 }
             }

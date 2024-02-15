@@ -16,7 +16,7 @@ public class TileInfo extends Label implements PropertyChangeListener {
         this.dataLookup = observe;
         this.sim = sim;
         this.pcs = new PropertyChangeSupport(this);
-        this.dataLookup.pcs.addPropertyChangeListener(this);
+        this.dataLookup.pcs.addPropertyChangeListener(this); //GRADING: 1.B SUBJECT-TILE AREA
         this.refactor(this.dataLookup);
     }
 
@@ -74,11 +74,12 @@ public class TileInfo extends Label implements PropertyChangeListener {
         }
         this.data.setTextAlignment(TextAlignment.LEFT);
         this.dataLookup.observed = true;
+        //GRADING: 1.B TRIGGER-TILE AREA
         this.pcs.firePropertyChange("refactored TI", null, this.data);
     }
 
     @Override
-    public void propertyChange(PropertyChangeEvent evt) {
+    public void propertyChange(PropertyChangeEvent evt) { //GRADING: 1.B OBSERVE-TILE AREA
         if(!Objects.equals(evt.getPropertyName(), "being observed")) {
             this.refactor(this.dataLookup);
         }

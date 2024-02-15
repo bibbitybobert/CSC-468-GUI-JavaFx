@@ -30,12 +30,12 @@ public class Layout extends BorderPane implements PropertyChangeListener{
 
         //set infoBar
         this.infoBar = new StoreInfo(this.data);
-        this.infoBar.pcs.addPropertyChangeListener(this);
+        this.infoBar.pcs.addPropertyChangeListener(this); //GRADING: 1.A SUBJECT-GRID
 
         //set tileInfo
         this.tileInfo = new TileInfo(this.data.tiles.get(0), this.data);
         ((TileView)this.simArea.grid.getChildren().get(0)).highlight();
-        this.tileInfo.pcs.addPropertyChangeListener(this);
+        this.tileInfo.pcs.addPropertyChangeListener(this); //GRADING: 1.B SUBJECT-TILE AREA
 
         //set actionCommand
         this.RBGroup = new ToggleGroup();
@@ -64,7 +64,7 @@ public class Layout extends BorderPane implements PropertyChangeListener{
     }
 
     @Override
-    public void propertyChange(PropertyChangeEvent evt) {
+    public void propertyChange(PropertyChangeEvent evt) { //GRADING: 1.A/1.B OBSERVE-GRID -TILE AREA
         this.root.setLeft(this.tileInfo.data);
         BorderPane.setAlignment(this.tileInfo.data, Pos.CENTER);
 

@@ -18,7 +18,7 @@ public class StoreView extends GridPane implements PropertyChangeListener{
         this.grid = new GridPane();
         this.sim = subj;
         this.grid.setId("StoreView");
-        this.sim.pcs.addPropertyChangeListener(this);
+        this.sim.pcs.addPropertyChangeListener(this); //GRADING: 1.A SUBJECT-GRID
     }
     public void removeListeners(){
         for(int i =0; i < this.sim.storeSize; i++) {
@@ -60,7 +60,7 @@ public class StoreView extends GridPane implements PropertyChangeListener{
     }
 
     @Override
-    public void propertyChange(PropertyChangeEvent evt) {
+    public void propertyChange(PropertyChangeEvent evt) { //GRADING: OBSERVE
         for(Node node : grid.getChildren()){
             ((TileView)node).propertyChange(evt);
         }
