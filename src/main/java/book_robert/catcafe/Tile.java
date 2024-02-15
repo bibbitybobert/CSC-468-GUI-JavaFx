@@ -7,13 +7,17 @@ public class Tile{
     //the subject of the holder
     public FloorArea type;
     public PropertyChangeSupport pcs;
+    public int t_t_cost;
+    public boolean observed;
 
     public Tile(){
         new Tile("empty");
     }
 
     public Tile(String newType){
-        pcs = new PropertyChangeSupport(this);
+        this.pcs = new PropertyChangeSupport(this);
+        this.observed = false;
+        this.t_t_cost = 0;
         switch (newType) {
             case "cat" -> this.type = new Cat();
             case "kitten" -> this.type = new Kitten();
@@ -22,28 +26,29 @@ public class Tile{
         }
     }
     public void change(String newType){
+        FloorArea oldType = this.type;
         switch (newType) {
-            case "cat" -> {
-                FloorArea oldType = this.type;
+            case "cat" ->
                 this.type = new Cat();
-                this.pcs.firePropertyChange("type", oldType, this.type);
-            }
-            case "kitten" -> {
-                FloorArea oldType = this.type;
+
+            case "kitten" ->
                 this.type = new Kitten();
-                this.pcs.firePropertyChange("type", oldType, this.type);
-            }
-            case "table" -> {
-                FloorArea oldType = this.type;
+
+            case "table" ->
                 this.type = new Table();
-                this.pcs.firePropertyChange("type", oldType, this.type);
-            }
-            default -> {
-                FloorArea oldType = this.type;
+
+            default ->
                 this.type = new Empty();
-                this.pcs.firePropertyChange("type", oldType, this.type);
-            }
+        }
+        this.pcs.firePropertyChange("type", oldType, this.type);
+    }
+
+    void nextWeek(){
+        if(this.type instanceof Cat && ((Cat) this.type).countdown == 0){
+            this.change("cat");
+        }
+        else if(this.type instanceof Kitten && ((Kitten) this.type).countdown == 0){
+            this.change("kitten");
         }
     }
-    void nextMonth(){}
 }
