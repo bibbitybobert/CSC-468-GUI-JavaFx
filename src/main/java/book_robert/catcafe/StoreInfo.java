@@ -15,7 +15,7 @@ public class StoreInfo extends Label implements PropertyChangeListener {
         this.data = new Label();
         this.simSubj = sim;
         this.pcs = new PropertyChangeSupport(this);
-        this.simSubj.pcs.addPropertyChangeListener(this);
+        this.simSubj.pcs.addPropertyChangeListener(this); //GRADING: 1.A SUBJECT-GRID
         this.setData();
     }
 
@@ -31,9 +31,10 @@ public class StoreInfo extends Label implements PropertyChangeListener {
 
 
     @Override
-    public void propertyChange(PropertyChangeEvent evt) {
+    public void propertyChange(PropertyChangeEvent evt) { //GRADING: 1.A OBSERVER-GRID
         StoreInfo oldSelf = this;
         setData();
+        //GRADING: 1.A TRIGGER-GRID
         this.pcs.firePropertyChange("updated Store Info", oldSelf, this);
     }
 }

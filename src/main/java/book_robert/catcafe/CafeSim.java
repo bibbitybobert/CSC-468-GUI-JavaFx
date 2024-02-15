@@ -60,7 +60,7 @@ public class CafeSim{
         this.tiles.get(idx).change(type);
         this.tiles.get(idx).t_t_cost += this.tiles.get(idx).type.totalCost;
         this.funds -= this.tiles.get(idx).type.totalCost;
-        this.pcs.firePropertyChange("setTile", oldTile, this.tiles.get(idx));
+        this.pcs.firePropertyChange("setTile", oldTile, this.tiles.get(idx)); //GRADING: 1.A TRIGGER-GRID
     }
     void nextWeek(){
         int oldWeek = this.week;
@@ -95,9 +95,9 @@ public class CafeSim{
             }
             t.nextWeek();
         }
-        this.pcs.firePropertyChange("weekChange", oldWeek, this.week);
+        this.pcs.firePropertyChange("weekChange", oldWeek, this.week); //GRADING: 1.A TRIGGER-GRID
         for(Tile t : this.tiles){
-            t.pcs.firePropertyChange("week update", oldWeek, this.week);
+            t.pcs.firePropertyChange("week update", oldWeek, this.week); //GRADING: 1.A/1.B TRIGGER-GRID/TRIGGER-TILE AREA
         }
     }
 
